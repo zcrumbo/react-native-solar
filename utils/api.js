@@ -1,34 +1,36 @@
-"use strict";
+'use strict';
 
-import request from "superagent";
-import { Parser } from "react-native-xml2js";
-import moment from "moment";
-import os from "os";
+import request from 'superagent';
+import { Parser } from 'react-native-xml2js';
+import moment from 'moment';
 
-const parser = new Parser({ mergeAttrs: true, charkey: "val", async: false });
-const server = os.hostname();
-const PORT = server === "localhost" ? 8000 : 80;
+const parser = new Parser({ mergeAttrs: true, charkey: 'val', async: false });
+// const server = os.hostname();
+// const PORT = server === "localhost" ? 8000 : 80;
+
+const server = '';
+const PORT = 80;
 
 var days = null;
 function fetchData(start, end, int, skip, url) {
   days = skip;
   const endPoint =
-    url || "http://www.zacharycrumbo.com/widgets/solar-vanilla/solar-xml.php";
+    url || 'http://www.zacharycrumbo.com/widgets/solar-vanilla/solar-xml.php';
   return new Promise((resolve, reject) => {
     request
       .post(endPoint)
-      .set("Accept", "application/json")
-      .set("Content-type", "application/x-www-form-urlencoded")
+      .set('Accept', 'application/json')
+      .set('Content-type', 'application/x-www-form-urlencoded')
       .send({
         start,
         end,
-        interval: int || "d",
+        interval: int || 'd',
         skip: skip || 363,
       })
       .end((err, res) => {
-        if (err) reject("server error");
+        if (err) reject('server error');
         parser.parseString(res.text, (err, results) => {
-          if (err) reject("xml parse error");
+          if (err) reject('xml parse error');
           resolve(results.group.data[0]);
         });
       });
@@ -40,26 +42,26 @@ function fetchDataProxy(start, end, int, skip) {
   return new Promise((resolve, reject) => {
     request
       .post(endPoint)
-      .set("Accept", "application/json")
-      .set("Content-type", "application/json")
+      .set('Accept', 'application/json')
+      .set('Content-type', 'application/json')
       .send({
         start,
         end,
-        interval: int || "d",
+        interval: int || 'd',
         skip: skip || 363,
       })
       .end((err, res) => {
-        if (err) reject(new Error("server error"));
-        if (!res.text) reject(new Error("no text in response"));
+        if (err) reject(new Error('server error'));
+        if (!res.text) reject(new Error('no text in response'));
         parser.parseString(res.text, (err, results) => {
-          if (err) reject(new Error("xml parse error"));
+          if (err) reject(new Error('xml parse error'));
           results.group.data[0].start = start;
           resolve(results.group.data[0]);
         });
       });
   });
 }
-function fetchDataInstantProxy() {
+function fetchDataInstant() {
   const uri = `http://${server}:${PORT}/api/proxy/instant`;
   return new Promise((resolve, reject) => {
     request.post(uri).end((err, res) => {
@@ -75,8 +77,8 @@ function processResultsPie(resObj) {
   let procObj = {};
   resObj.r[0].c.forEach((el, index) => {
     let name = resObj.cname[index].val
-      .replace(/[D\s]/g, "_")
-      .replace(/[!@|]/g, "")
+      .replace(/[D\s]/g, '_')
+      .replace(/[!@|]/g, '')
       .toLowerCase();
 
     procObj[name] = (el - resObj.r[resObj.r.length - 1].c[index]) / 3600000;
@@ -89,8 +91,8 @@ function processResultsLine(resObj) {
   let procObj = {};
   resObj.r[0].c.forEach((el, index) => {
     let name = resObj.cname[index].val
-      .replace(/[D\s]/g, "_")
-      .replace(/[!@|]/g, "")
+      .replace(/[D\s]/g, '_')
+      .replace(/[!@|]/g, '')
       .toLowerCase();
 
     procObj[name] = resObj.r.map((row, i, array) => {
@@ -98,8 +100,8 @@ function processResultsLine(resObj) {
         return {
           date: moment
             .unix(resObj.start)
-            .add(resObj.time_delta[0] * (array.length - i), "seconds")
-            .format("MM DD YY HH:mm"),
+            .add(resObj.time_delta[0] * (array.length - i), 'seconds')
+            .format('MM DD YY HH:mm'),
           kwh: (array[i - 1].c[index] - row.c[index]) / 3600000,
         };
       }

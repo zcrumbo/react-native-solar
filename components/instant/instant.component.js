@@ -1,7 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { fetchDataInstantProxy } from '../../utils/api.js';
+import { fetchDataInstant } from '../../utils/api.js';
 
 
 export class InstantDisplay extends Component {
