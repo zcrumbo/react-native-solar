@@ -1,8 +1,8 @@
 'use strict';
 
 import React, { Component } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { fetchDataInstant } from '../../utils/api.js';
-
 
 export class InstantDisplay extends Component {
   constructor(props) {
@@ -37,7 +37,7 @@ export class InstantDisplay extends Component {
 
   updateInst() {
     if (!this.tryNum) this.tryNum = 1;
-    fetchDataInstantProxy()
+    fetchDataInstant()
       .then(res => {
         this.tryNum = 1;
         let total = res.instant.consumption + res.instant.generation;
@@ -77,21 +77,42 @@ export class InstantDisplay extends Component {
   }
 
   render() {
-    return <section className="instant-display">
-        <div className={this.state.classes} onClick={this.toggleView}>
-          <div className="made" style={{ width: Math.abs(this.state.generated * 100) + 'vw' }}>
-            <p>{this.state.instant.generation} Watts</p>
-          </div>
-          <div className="used" style={{ width: this.state.consumed * 100 + 'vw' }}>
-            <p>this.state.instant.consumption Watts</p>
-          </div>
-        </div>
-        <h2>Instant</h2>
-        <div className="btn-classic" onClick={this.pauseInst}>
+    return (
+      <View style={styles.container} className="instant-display">
+        <View className={this.state.classes} onClick={this.toggleView}>
+          <View
+            className="made"
+            style={{ width: Math.abs(this.state.generated * 100) , backgroundColor: 'green'}}
+          >
+            <Text>{this.state.instant.generation} Watts</Text>
+          </View>
+          <View
+            className="used"
+            style={{ width: this.state.consumed * 100, backgroundColor: 'red' }}
+          >
+            <Text>{this.state.instant.consumption} Watts</Text>
+          </View>
+        </View>
+        <Text>Instant</Text>
+        <Text className="btn-classic" onClick={this.pauseInst}>
           &#9616;&#9616;
-        </div>
-      </section>;
+        </Text>
+      </View>
+    );
   }
 }
 
-export default InstantDisplay;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  consumed: {
+    backgroundColor: 'red',
+  },
+  produced: {
+    backgroundColor: 'green',
+  },
+});

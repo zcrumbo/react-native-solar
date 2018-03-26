@@ -12,7 +12,7 @@ const server = '';
 const PORT = 80;
 
 var days = null;
-function fetchData(start, end, int, skip, url) {
+export function fetchData(start, end, int, skip, url) {
   days = skip;
   const endPoint =
     url || 'http://www.zacharycrumbo.com/widgets/solar-vanilla/solar-xml.php';
@@ -36,7 +36,7 @@ function fetchData(start, end, int, skip, url) {
       });
   });
 }
-function fetchDataProxy(start, end, int, skip) {
+export function fetchDataProxy(start, end, int, skip) {
   days = skip;
   const endPoint = `http://${server}:${PORT}/api/proxy/saved`;
   return new Promise((resolve, reject) => {
@@ -61,7 +61,7 @@ function fetchDataProxy(start, end, int, skip) {
       });
   });
 }
-function fetchDataInstant() {
+export function fetchDataInstantProxy() {
   const uri = `http://${server}:${PORT}/api/proxy/instant`;
   return new Promise((resolve, reject) => {
     request.post(uri).end((err, res) => {
@@ -73,7 +73,19 @@ function fetchDataInstant() {
     });
   });
 }
-function processResultsPie(resObj) {
+export function fetchDataInstant() {
+  const uri = 'http://egauge16844.egaug.es/cgi-bin/egauge?inst';
+  return new Promise((resolve, reject) => {
+    request.post(uri).end((err, res) => {
+      if (err) reject(new Error(err));
+      parser.parseString(res.text.trim(), (err, results) => {
+        if (err) reject(err);
+        if (results) resolve(processResultsIns(results));
+      });
+    });
+  });
+}
+export function processResultsPie(resObj) {
   let procObj = {};
   resObj.r[0].c.forEach((el, index) => {
     let name = resObj.cname[index].val
@@ -86,7 +98,7 @@ function processResultsPie(resObj) {
   return procObj;
 }
 
-function processResultsLine(resObj) {
+export function processResultsLine(resObj) {
   //console.log(resObj)
   let procObj = {};
   resObj.r[0].c.forEach((el, index) => {
@@ -110,7 +122,7 @@ function processResultsLine(resObj) {
   return procObj;
 }
 
-function processResultsIns(resObj) {
+export function processResultsIns(resObj) {
   const procObj = {
     instant: {
       generation: parseInt(resObj.data.r[1].i[0]),
@@ -121,11 +133,3 @@ function processResultsIns(resObj) {
   return procObj;
 }
 
-export {
-  fetchData,
-  fetchDataProxy,
-  fetchDataInstantProxy,
-  processResultsPie,
-  processResultsLine,
-  processResultsIns,
-};
