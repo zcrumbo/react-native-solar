@@ -14,7 +14,7 @@ export class InstantDisplay extends Component {
     this.state = {
       expanded: false,
       paused: false,
-      classes: 'data-vis',
+      classes: 'dataVis',
       consumed: 0.5,
       generated: 0.5,
       prevGen: 0,
@@ -77,26 +77,27 @@ export class InstantDisplay extends Component {
   }
 
   render() {
+    const ratioGen = (this.state.instant.generation + this.state.instant.consumption)/this.state.instant.generation;
     return (
       <View style={styles.container} className="instant-display">
-        <View className={this.state.classes} onClick={this.toggleView}>
+        <View className={this.state.classes} onClick={this.toggleView} style={styles.dataVis}>
           <View
             className="made"
-            style={{ width: Math.abs(this.state.generated * 100) , backgroundColor: 'green'}}
+            style={{ flex: this.state.generated , backgroundColor: 'green'}}
           >
             <Text>{this.state.instant.generation} Watts</Text>
           </View>
           <View
             className="used"
-            style={{ width: this.state.consumed * 100, backgroundColor: 'red' }}
+            style={{ flex: this.state.consumed, backgroundColor: 'red' }}
           >
             <Text>{this.state.instant.consumption} Watts</Text>
           </View>
         </View>
-        <Text>Instant</Text>
+        {/* (<Text>Instant</Text>
         <Text className="btn-classic" onClick={this.pauseInst}>
           &#9616;&#9616;
-        </Text>
+        </Text>) */}
       </View>
     );
   }
@@ -105,14 +106,13 @@ export class InstantDisplay extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  consumed: {
-    backgroundColor: 'red',
-  },
-  produced: {
-    backgroundColor: 'green',
-  },
+  dataVis: {
+    flex:1,
+    flexDirection: 'column',
+  }
 });

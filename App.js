@@ -6,7 +6,7 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Instant />
+        <Instant style={styles.instant} />
       </View>
     );
   }
@@ -19,4 +19,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  instant: {
+    flex:1,
+    flexDirection: 'row',
+  }
 });

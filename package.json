@@ -21,9 +21,11 @@
   },
   "dependencies": {
     "expo": "^25.0.0",
+    "global": "^4.3.2",
     "moment": "^2.21.0",
     "os": "^0.1.1",
     "react": "16.2.0",
+    "react-devtools": "^3.2.1",
     "react-native": "0.52.0",
     "react-native-xml2js": "^1.0.3",
     "superagent": "^3.8.2",
