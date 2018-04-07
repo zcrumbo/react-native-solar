@@ -1,7 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, TouchableHighlight, Text, StyleSheet } from 'react-native';
 import { fetchDataInstant } from '../../utils/api.js';
 
 export class InstantDisplay extends Component {
@@ -66,10 +66,8 @@ export class InstantDisplay extends Component {
   }
 
   toggleView() {
-    let newclass = [];
-    this.state.expanded
-      ? (newclass = 'data-vis')
-      : (newclass = 'data-vis expanded');
+    let newclass;
+    this.state.expanded ? (newclass = 'contracted') : (newclass = 'expanded');
     this.setState({
       expanded: !this.state.expanded,
       classes: newclass,
@@ -77,27 +75,35 @@ export class InstantDisplay extends Component {
   }
 
   render() {
-    const ratioGen = (this.state.instant.generation + this.state.instant.consumption)/this.state.instant.generation;
+    const ratioGen =
+      (this.state.instant.generation + this.state.instant.consumption) /
+      this.state.instant.generation;
     return (
-      <View style={styles.container} className="instant-display">
-        <View className={this.state.classes} onClick={this.toggleView} style={styles.dataVis}>
-          <View
-            className="made"
-            style={{ flex: this.state.generated , backgroundColor: 'green'}}
-          >
-            <Text>{this.state.instant.generation} Watts</Text>
+      <View
+        style={this.state.expanded ? styles.expanded : styles.contracted}
+        className="instant-display"
+      >
+        <TouchableHighlight onPress={this.toggleView} style={{ flex: 1 }}>
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            <View
+              className="made"
+              style={{ flex: this.state.generated, backgroundColor: 'green' }}
+            >
+              <Text>{this.state.instant.generation} Watts</Text>
+            </View>
+            <View
+              className="used"
+              style={{ flex: this.state.consumed, backgroundColor: 'red' }}
+            >
+              <Text>{this.state.instant.consumption} Watts</Text>
+            </View>
           </View>
-          <View
-            className="used"
-            style={{ flex: this.state.consumed, backgroundColor: 'red' }}
-          >
-            <Text>{this.state.instant.consumption} Watts</Text>
-          </View>
-        </View>
+        </TouchableHighlight>
         {/* (<Text>Instant</Text>
         <Text className="btn-classic" onClick={this.pauseInst}>
-          &#9616;&#9616;
-        </Text>) */}
+        &#9616;&#9616;
+      </Text>) */}
+
       </View>
     );
   }
@@ -106,13 +112,21 @@ export class InstantDisplay extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: 'row',
   },
-  dataVis: {
-    flex:1,
-    flexDirection: 'column',
+  contracted: {
+    height: 40,
+    flexDirection: 'row',
+  },
+  expanded: {
+    height: 80,
+    flexDirection: 'row',
+  },
+  textShow: {
+    opacity: .7,
+  },
+  textHide: {
+    opacity: 0,
   }
+  
 });
