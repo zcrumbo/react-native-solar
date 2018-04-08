@@ -89,13 +89,13 @@ export class InstantDisplay extends Component {
               className="made"
               style={{ flex: this.state.generated, backgroundColor: 'green' }}
             >
-              <Text>{this.state.instant.generation} Watts</Text>
+              <Text style={this.state.expanded ? styles.textShow : styles.textHide}>{this.state.instant.generation} Watts</Text>
             </View>
             <View
               className="used"
               style={{ flex: this.state.consumed, backgroundColor: 'red' }}
             >
-              <Text>{this.state.instant.consumption} Watts</Text>
+              <Text style={this.state.expanded ? styles.textShow : styles.textHide}>{this.state.instant.consumption} Watts</Text>
             </View>
           </View>
         </TouchableHighlight>
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   textShow: {
-    opacity: .7,
+    opacity: .5,
   },
   textHide: {
     opacity: 0,
