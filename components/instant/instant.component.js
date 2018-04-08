@@ -8,7 +8,9 @@ import {
   Text,
   StyleSheet,
   LayoutAnimation,
+  Animated,
 } from 'react-native';
+import { FadeInView } from './fade-in-view.component.js';
 import { fetchDataInstant } from '../../utils/api.js';
 
 export class InstantDisplay extends Component {
@@ -21,14 +23,11 @@ export class InstantDisplay extends Component {
     this.state = {
       expanded: true,
       paused: false,
-      consumed: 0.5,
-      generated: 0.5,
+      consumed: 0.9,
+      generated: 0.1,
       prevGen: 0,
       prevCons: 0,
-      instant: {
-        generation: 0,
-        consumption: 0,
-      },
+      instant: { generation: 0, consumption: 0 },
     };
   }
   componentWillMount() {
@@ -37,6 +36,7 @@ export class InstantDisplay extends Component {
       this.reqTimer = setInterval(() => this.updateInst(), 1000);
     }
   }
+  componentDidMount() {}
   componentWillUnmount() {
     clearInterval(this.reqTimer);
   }
@@ -49,6 +49,7 @@ export class InstantDisplay extends Component {
         let total = res.instant.consumption + res.instant.generation;
         let percentMade = res.instant.generation / total;
         let percentUsed = res.instant.consumption / total;
+        LayoutAnimation.easeInEaseOut();
         this.setState(prevState => ({
           generated: percentMade,
           consumed: percentUsed,
@@ -84,24 +85,30 @@ export class InstantDisplay extends Component {
       this.state.instant.generation;
     return (
       <View
-        style={this.state.expanded ? styles.expanded : styles.contracted}
+        style={
+          this.state.expanded ? this.styles.expanded : this.styles.contracted
+        }
         className="instant-display"
       >
         <TouchableHighlight onPress={this.toggleView} style={{ flex: 1 }}>
           <View style={{ flex: 1, flexDirection: 'row' }}>
             <View
-              className="made"
               style={{
                 flex: this.state.generated,
                 backgroundColor: 'rgba(0,255,0, .7)',
               }}
             >
-              <AnimateNumber
-                value={this.state.instant.generation}
-                numberOfLines={1}
-                timing="easeOut"
-                style={this.state.expanded ? styles.textShow : styles.textHide}
-              />
+              {this.state.expanded && (
+                <FadeInView style={{ flex: 1 }} duration={500}>
+                  <AnimateNumber
+                    value={this.state.instant.generation}
+                    numberOfLines={1}
+                    timing="easeOut"
+                    style={this.styles.textShow}
+                    formatter={this.formatter}
+                  />
+                </FadeInView>
+              )}
             </View>
             <View
               className="used"
@@ -110,14 +117,21 @@ export class InstantDisplay extends Component {
                 backgroundColor: 'rgba(255,69,0,.7)',
               }}
             >
-              <AnimateNumber
-                value={this.state.instant.consumption}
-                timing="easeOut"
-                numberOfLines={1}
-                style={
-                  this.state.expanded ? styles.textShowRight : styles.textHide
-                }
-              />
+              {this.state.expanded && (
+                <FadeInView style={{ flex: 1 }} duration={500}>
+                  <AnimateNumber
+                    value={this.state.instant.consumption}
+                    timing="easeOut"
+                    numberOfLines={1}
+                    style={
+                      this.state.expanded
+                        ? this.styles.textShowRight
+                        : this.styles.textHide
+                    }
+                    formatter={this.formatter}
+                  />
+                </FadeInView>
+              )}
             </View>
           </View>
         </TouchableHighlight>
@@ -128,41 +142,42 @@ export class InstantDisplay extends Component {
       </View>
     );
   }
+  formatter = val => parseFloat(val).toFixed(0);
+
+  fontStyleBase = {
+    fontFamily: 'Avenir Next',
+    fontSize: 60,
+    fontWeight: '600',
+    position: 'absolute',
+    width: 200,
+    opacity: 1,
+  };
+
+  styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      flexDirection: 'row',
+    },
+    contracted: {
+      height: 30,
+      flexDirection: 'row',
+    },
+    expanded: {
+      height: 80,
+      flexDirection: 'row',
+    },
+    textShow: {
+      ...this.fontStyleBase,
+      color: 'darkgreen',
+    },
+    textShowRight: {
+      ...this.fontStyleBase,
+      textAlign: 'right',
+      right: 0,
+      color: 'maroon',
+    },
+    textHide: {
+      opacity: 0,
+    },
+  });
 }
-
-const fontStyleBase = {
-  fontFamily: 'Avenir Next',
-  fontSize: 60,
-  fontWeight: '600',
-  position: 'absolute',
-  width: 200,
-};
-const formatter = val => parseFloat(val).toFixed(0);
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  contracted: {
-    height: 30,
-    flexDirection: 'row',
-  },
-  expanded: {
-    height: 80,
-    flexDirection: 'row',
-  },
-  textShow: {
-    ...fontStyleBase,
-    color: 'darkgreen',
-  },
-  textShowRight: {
-    ...fontStyleBase,
-    textAlign: 'right',
-    right: 0,
-    color: 'maroon',
-  },
-  textHide: {
-    opacity: 0,
-  },
-});
