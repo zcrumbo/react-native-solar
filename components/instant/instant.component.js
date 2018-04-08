@@ -1,7 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { View, TouchableHighlight, Text, StyleSheet } from 'react-native';
+import { View, TouchableHighlight, Text, StyleSheet, LayoutAnimation } from 'react-native';
 import { fetchDataInstant } from '../../utils/api.js';
 
 export class InstantDisplay extends Component {
@@ -67,6 +67,7 @@ export class InstantDisplay extends Component {
 
   toggleView() {
     let newclass;
+    LayoutAnimation.spring();
     this.state.expanded ? (newclass = 'contracted') : (newclass = 'expanded');
     this.setState({
       expanded: !this.state.expanded,
@@ -89,13 +90,13 @@ export class InstantDisplay extends Component {
               className="made"
               style={{ flex: this.state.generated, backgroundColor: 'green' }}
             >
-              <Text style={this.state.expanded ? styles.textShow : styles.textHide}>{this.state.instant.generation} Watts</Text>
+              <Text adjustsFontSizeToFit={true} style={this.state.expanded ? styles.textShow : styles.textHide}>{this.state.instant.generation}</Text>
             </View>
             <View
               className="used"
               style={{ flex: this.state.consumed, backgroundColor: 'red' }}
             >
-              <Text style={this.state.expanded ? styles.textShow : styles.textHide}>{this.state.instant.consumption} Watts</Text>
+              <Text adjustsFontSizeToFit={true} style={this.state.expanded ? styles.textShow : styles.textHide}>{this.state.instant.consumption}</Text>
             </View>
           </View>
         </TouchableHighlight>
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   contracted: {
-    height: 40,
+    height: 30,
     flexDirection: 'row',
   },
   expanded: {
@@ -123,10 +124,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   textShow: {
-    opacity: .5,
+    opacity: 0.7,
+    fontFamily: 'Avenir Next',
   },
   textHide: {
     opacity: 0,
-  }
-  
+  },
 });
