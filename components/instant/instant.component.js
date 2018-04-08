@@ -1,6 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
+import AnimateNumber from 'react-native-countup';
 import {
   View,
   TouchableHighlight,
@@ -90,29 +91,33 @@ export class InstantDisplay extends Component {
           <View style={{ flex: 1, flexDirection: 'row' }}>
             <View
               className="made"
-              style={{ flex: this.state.generated, backgroundColor: 'lime' }}
+              style={{
+                flex: this.state.generated,
+                backgroundColor: 'rgba(0,255,0, .7)',
+              }}
             >
-              <Text
+              <AnimateNumber
+                value={this.state.instant.generation}
+                numberOfLines={1}
+                timing="easeOut"
                 style={this.state.expanded ? styles.textShow : styles.textHide}
-              >
-                {this.state.instant.generation}
-              </Text>
+              />
             </View>
             <View
               className="used"
               style={{
                 flex: this.state.consumed,
-                backgroundColor: 'orangered',
+                backgroundColor: 'rgba(255,69,0,.7)',
               }}
             >
-              <Text
+              <AnimateNumber
+                value={this.state.instant.consumption}
+                timing="easeOut"
                 numberOfLines={1}
                 style={
                   this.state.expanded ? styles.textShowRight : styles.textHide
                 }
-              >
-                {this.state.instant.consumption}
-              </Text>
+              />
             </View>
           </View>
         </TouchableHighlight>
@@ -126,13 +131,13 @@ export class InstantDisplay extends Component {
 }
 
 const fontStyleBase = {
-  opacity: 0.8,
   fontFamily: 'Avenir Next',
   fontSize: 60,
   fontWeight: '600',
   position: 'absolute',
-  width: 200
+  width: 200,
 };
+const formatter = val => parseFloat(val).toFixed(0);
 
 const styles = StyleSheet.create({
   container: {
@@ -155,7 +160,7 @@ const styles = StyleSheet.create({
     ...fontStyleBase,
     textAlign: 'right',
     right: 0,
-    color: 'maroon'
+    color: 'maroon',
   },
   textHide: {
     opacity: 0,
