@@ -1,13 +1,14 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet, View, StatusBar } from 'react-native';
 import { InstantDisplay as Instant } from './components/instant/instant.component';
 
 export default class App extends React.Component {
   render() {
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <Instant style={styles.instant} />
-      </SafeAreaView>
+        <View style={{position:'absolute', backgroundColor:'white', top:0, height:20, width:'100%'}}></View>
+      </View>
     );
   }
 }
@@ -17,7 +18,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   instant: {
-    flex:1,
-    flexDirection: 'row',
-  }
+
+  },
 });

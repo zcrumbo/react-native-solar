@@ -74,9 +74,7 @@ export class InstantDisplay extends Component {
 
   toggleView() {
     LayoutAnimation.spring();
-    this.setState({
-      expanded: !this.state.expanded,
-    });
+    this.setState({ expanded: !this.state.expanded });
   }
 
   render() {
@@ -90,7 +88,10 @@ export class InstantDisplay extends Component {
         }
         className="instant-display"
       >
-        <TouchableHighlight onPress={this.toggleView} style={{ flex: 1 }}>
+        <TouchableHighlight
+          onPress={this.toggleView}
+          style={{ flex: 1 }}
+        >
           <View style={{ flex: 1, flexDirection: 'row' }}>
             <View
               style={{
@@ -98,17 +99,17 @@ export class InstantDisplay extends Component {
                 backgroundColor: 'rgba(0,255,0, .7)',
               }}
             >
-              {this.state.expanded && (
-                <FadeInView style={{ flex: 1 }} duration={500}>
-                  <AnimateNumber
-                    value={this.state.instant.generation}
-                    numberOfLines={1}
-                    timing="easeOut"
-                    style={this.styles.textShow}
-                    formatter={this.formatter}
-                  />
-                </FadeInView>
-              )}
+              <AnimateNumber
+                value={this.state.instant.generation}
+                numberOfLines={1}
+                timing="easeOut"
+                style={
+                  this.state.expanded
+                    ? this.styles.textShow
+                    : this.styles.textHide
+                }
+                formatter={this.formatter}
+              />
             </View>
             <View
               className="used"
@@ -117,21 +118,17 @@ export class InstantDisplay extends Component {
                 backgroundColor: 'rgba(255,69,0,.7)',
               }}
             >
-              {this.state.expanded && (
-                <FadeInView style={{ flex: 1 }} duration={500}>
-                  <AnimateNumber
-                    value={this.state.instant.consumption}
-                    timing="easeOut"
-                    numberOfLines={1}
-                    style={
-                      this.state.expanded
-                        ? this.styles.textShowRight
-                        : this.styles.textHide
-                    }
-                    formatter={this.formatter}
-                  />
-                </FadeInView>
-              )}
+              <AnimateNumber
+                value={this.state.instant.consumption}
+                timing="easeOut"
+                numberOfLines={1}
+                style={
+                  this.state.expanded
+                    ? this.styles.textShowRight
+                    : this.styles.textHide
+                }
+                formatter={this.formatter}
+              />
             </View>
           </View>
         </TouchableHighlight>
@@ -147,6 +144,7 @@ export class InstantDisplay extends Component {
   fontStyleBase = {
     fontFamily: 'Avenir Next',
     fontSize: 60,
+    height: 80,
     fontWeight: '600',
     position: 'absolute',
     width: 200,
@@ -154,16 +152,14 @@ export class InstantDisplay extends Component {
   };
 
   styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      flexDirection: 'row',
-    },
     contracted: {
-      height: 30,
+      height: 80,
+      marginTop: -30,
       flexDirection: 'row',
     },
     expanded: {
       height: 80,
+      marginTop: 20,
       flexDirection: 'row',
     },
     textShow: {
