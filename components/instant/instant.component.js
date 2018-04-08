@@ -1,7 +1,13 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { View, TouchableHighlight, Text, StyleSheet, LayoutAnimation } from 'react-native';
+import {
+  View,
+  TouchableHighlight,
+  Text,
+  StyleSheet,
+  LayoutAnimation,
+} from 'react-native';
 import { fetchDataInstant } from '../../utils/api.js';
 
 export class InstantDisplay extends Component {
@@ -12,9 +18,8 @@ export class InstantDisplay extends Component {
     this.pauseInst = this.pauseInst.bind(this);
     this.tryNum = 0;
     this.state = {
-      expanded: false,
+      expanded: true,
       paused: false,
-      classes: 'dataVis',
       consumed: 0.5,
       generated: 0.5,
       prevGen: 0,
@@ -66,12 +71,9 @@ export class InstantDisplay extends Component {
   }
 
   toggleView() {
-    let newclass;
     LayoutAnimation.spring();
-    this.state.expanded ? (newclass = 'contracted') : (newclass = 'expanded');
     this.setState({
       expanded: !this.state.expanded,
-      classes: newclass,
     });
   }
 
@@ -88,15 +90,29 @@ export class InstantDisplay extends Component {
           <View style={{ flex: 1, flexDirection: 'row' }}>
             <View
               className="made"
-              style={{ flex: this.state.generated, backgroundColor: 'green' }}
+              style={{ flex: this.state.generated, backgroundColor: 'lime' }}
             >
-              <Text adjustsFontSizeToFit={true} style={this.state.expanded ? styles.textShow : styles.textHide}>{this.state.instant.generation}</Text>
+              <Text
+                style={this.state.expanded ? styles.textShow : styles.textHide}
+              >
+                {this.state.instant.generation}
+              </Text>
             </View>
             <View
               className="used"
-              style={{ flex: this.state.consumed, backgroundColor: 'red' }}
+              style={{
+                flex: this.state.consumed,
+                backgroundColor: 'orangered',
+              }}
             >
-              <Text adjustsFontSizeToFit={true} style={this.state.expanded ? styles.textShow : styles.textHide}>{this.state.instant.consumption}</Text>
+              <Text
+                numberOfLines={1}
+                style={
+                  this.state.expanded ? styles.textShowRight : styles.textHide
+                }
+              >
+                {this.state.instant.consumption}
+              </Text>
             </View>
           </View>
         </TouchableHighlight>
@@ -104,11 +120,19 @@ export class InstantDisplay extends Component {
         <Text className="btn-classic" onClick={this.pauseInst}>
         &#9616;&#9616;
       </Text>) */}
-
       </View>
     );
   }
 }
+
+const fontStyleBase = {
+  opacity: 0.8,
+  fontFamily: 'Avenir Next',
+  fontSize: 60,
+  fontWeight: '600',
+  position: 'absolute',
+  width: 200
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -124,8 +148,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   textShow: {
-    opacity: 0.7,
-    fontFamily: 'Avenir Next',
+    ...fontStyleBase,
+    color: 'darkgreen',
+  },
+  textShowRight: {
+    ...fontStyleBase,
+    textAlign: 'right',
+    right: 0,
+    color: 'maroon'
   },
   textHide: {
     opacity: 0,
