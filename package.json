@@ -20,6 +20,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "d3-shape": "^1.2.0",
     "expo": "^25.0.0",
     "global": "^4.3.2",
     "moment": "^2.21.0",
@@ -30,6 +31,7 @@
     "react-native-counter": "^0.2.0",
     "react-native-countup": "^0.0.2",
     "react-native-svg": "^6.3.1",
+    "react-native-svg-charts": "^5.2.0",
     "react-native-xml2js": "^1.0.3",
     "superagent": "^3.8.2",
     "xml2js": "^0.4.19"
